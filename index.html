@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chef AI — Scan, Cook & Track</title>
+<meta name="description" content="Scan your fridge. Get AI-powered recipes instantly. Track macros and save money by cooking at home.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  :root {
+    --green: #2D6A4F;
+    --green-light: #52B788;
+    --green-pale: #D8F3DC;
+    --cream: #FAFAF7;
+    --dark: #1A1A18;
+    --mid: #4A4A45;
+    --border: #E8E8E2;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(250,250,247,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+
+  .nav-logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--dark);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .nav-logo-text {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--dark);
+  }
+
+  .nav-cta {
+    background: var(--dark);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: opacity 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.8; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--green-pale) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--green-pale);
+    color: var(--green);
+    padding: 8px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--green-light);
+    border-radius: 50%;
+  }
+
+  .hero-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 900;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    color: var(--dark);
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease 0.1s both;
+    max-width: 900px;
+  }
+
+  .hero-headline em {
+    font-style: italic;
+    color: var(--green);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--mid);
+    margin-top: 24px;
+    max-width: 480px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+
+  .hero-form {
+    display: flex;
+    gap: 12px;
+    margin-top: 40px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease 0.3s both;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero-input {
+    padding: 14px 20px;
+    border-radius: 100px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    width: 280px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .hero-input:focus { border-color: var(--green-light); }
+
+  .hero-btn {
+    padding: 14px 28px;
+    border-radius: 100px;
+    background: var(--dark);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  .hero-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .hero-social-proof {
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--mid);
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+
+  .hero-phones {
+    margin-top: 80px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.8s ease 0.5s both;
+  }
+
+  .phone-mockup {
+    width: 260px;
+    height: 520px;
+    background: var(--dark);
+    border-radius: 40px;
+    border: 8px solid #2a2a28;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.2);
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(160deg, #1a3a2a 0%, #0d1f16 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .phone-scan-frame {
+    width: 160px;
+    height: 160px;
+    border: 2px solid var(--green-light);
+    border-radius: 16px;
+    position: relative;
+    margin-bottom: 24px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .phone-scan-frame::before,
+  .phone-scan-frame::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-color: var(--green-light);
+    border-style: solid;
+  }
+
+  .phone-scan-frame::before {
+    top: -2px;
+    left: -2px;
+    border-width: 3px 0 0 3px;
+    border-radius: 4px 0 0 0;
+  }
+
+  .phone-scan-frame::after {
+    bottom: -2px;
+    right: -2px;
+    border-width: 0 3px 3px 0;
+    border-radius: 0 0 4px 0;
+  }
+
+  .phone-scan-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green-light), transparent);
+    animation: scanLine 2s ease-in-out infinite;
+  }
+
+  .phone-ingredients {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+
+  .phone-ingredient-chip {
+    background: rgba(82, 183, 136, 0.2);
+    border: 1px solid rgba(82, 183, 136, 0.4);
+    color: var(--green-light);
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .phone-recipe-card {
+    background: rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 16px;
+    width: 100%;
+    text-align: left;
+  }
+
+  .phone-recipe-title {
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .phone-recipe-meta {
+    color: rgba(255,255,255,0.5);
+    font-size: 10px;
+  }
+
+  /* FEATURES */
+  .features {
+    padding: 120px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+
+  .section-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    max-width: 600px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  .feature-card {
+    background: white;
+    border-radius: 24px;
+    padding: 36px;
+    border: 1px solid var(--border);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+  }
+
+  .feature-icon {
+    width: 48px;
+    height: 48px;
+    background: var(--green-pale);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .feature-title {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .feature-desc {
+    font-size: 15px;
+    color: var(--mid);
+    line-height: 1.6;
+  }
+
+  /* SAVINGS */
+  .savings {
+    background: var(--dark);
+    color: white;
+    padding: 120px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .savings::before {
+    content: '';
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(82,183,136,0.15) 0%, transparent 60%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .savings-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+    position: relative;
+  }
+
+  .savings-amount {
+    color: var(--green-light);
+    display: block;
+    font-size: clamp(64px, 12vw, 140px);
+  }
+
+  .savings-sub {
+    color: rgba(255,255,255,0.6);
+    font-size: 18px;
+    margin-top: 16px;
+    position: relative;
+  }
+
+  .savings-stats {
+    display: flex;
+    justify-content: center;
+    gap: 64px;
+    margin-top: 64px;
+    flex-wrap: wrap;
+    position: relative;
+  }
+
+  .savings-stat-number {
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: white;
+  }
+
+  .savings-stat-label {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+
+  /* HOW IT WORKS */
+  .how {
+    padding: 120px 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .steps {
+    margin-top: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 32px;
+    padding: 40px 0;
+    border-bottom: 1px solid var(--border);
+    align-items: start;
+  }
+
+  .step:last-child { border-bottom: none; }
+
+  .step-number {
+    font-family: 'Fraunces', serif;
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--border);
+    line-height: 1;
+  }
+
+  .step-title {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .step-desc {
+    font-size: 16px;
+    color: var(--mid);
+    line-height: 1.6;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials {
+    background: var(--green-pale);
+    padding: 120px 48px;
+    text-align: center;
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px;
+    max-width: 1000px;
+    margin: 64px auto 0;
+    text-align: left;
+  }
+
+  .testimonial-card {
+    background: white;
+    border-radius: 20px;
+    padding: 28px;
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  .testimonial-stars {
+    color: #F4A024;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .testimonial-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--dark);
+    margin-bottom: 16px;
+    font-style: italic;
+  }
+
+  .testimonial-author {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .testimonial-role {
+    font-size: 13px;
+    color: var(--mid);
+  }
+
+  /* PRICING */
+  .pricing {
+    padding: 120px 48px;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .pricing-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  .pricing-card {
+    background: white;
+    border-radius: 24px;
+    padding: 36px;
+    border: 1.5px solid var(--border);
+    text-align: left;
+    position: relative;
+  }
+
+  .pricing-card.featured {
+    border-color: var(--green);
+    background: var(--dark);
+    color: white;
+  }
+
+  .pricing-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--green-light);
+    color: var(--dark);
+    padding: 4px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .pricing-plan {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--mid);
+    margin-bottom: 8px;
+  }
+
+  .pricing-card.featured .pricing-plan { color: rgba(255,255,255,0.6); }
+
+  .pricing-price {
+    font-family: 'Fraunces', serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .pricing-period {
+    font-size: 14px;
+    color: var(--mid);
+    margin-bottom: 24px;
+  }
+
+  .pricing-card.featured .pricing-period { color: rgba(255,255,255,0.5); }
+
+  .pricing-features {
+    list-style: none;
+    margin-bottom: 28px;
+  }
+
+  .pricing-features li {
+    font-size: 14px;
+    color: var(--mid);
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pricing-card.featured .pricing-features li { color: rgba(255,255,255,0.7); }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--green-light);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pricing-btn {
+    display: block;
+    text-align: center;
+    padding: 14px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+
+  .pricing-btn:hover { opacity: 0.85; }
+
+  .pricing-btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--dark);
+  }
+
+  .pricing-btn-filled {
+    background: var(--green-light);
+    color: var(--dark);
+  }
+
+  /* CTA */
+  .cta {
+    background: var(--green);
+    padding: 120px 48px;
+    text-align: center;
+    color: white;
+  }
+
+  .cta-headline {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(40px, 6vw, 72px);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -2px;
+    margin-bottom: 24px;
+  }
+
+  .cta-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 40px;
+  }
+
+  .cta-form {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-input {
+    padding: 14px 20px;
+    border-radius: 100px;
+    border: none;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    width: 280px;
+    outline: none;
+  }
+
+  .cta-btn {
+    padding: 14px 28px;
+    border-radius: 100px;
+    background: var(--dark);
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .cta-btn:hover { opacity: 0.85; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    color: rgba(255,255,255,0.5);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: gap;
+    gap: 24px;
+  }
+
+  .footer-logo {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: white;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    color: rgba(255,255,255,0.5);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: white; }
+
+  .footer-copy {
+    font-size: 13px;
+  }
+
+  /* SUCCESS STATE */
+  .success-message {
+    display: none;
+    background: var(--green-pale);
+    color: var(--green);
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 16px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes scanLine {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .features, .how, .savings, .testimonials, .pricing, .cta { padding: 80px 24px; }
+    .pricing-cards { grid-template-columns: 1fr; }
+    .savings-stats { gap: 32px; }
+    footer { flex-direction: column; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">
+    <div class="nav-logo-icon">🍳</div>
+    <span class="nav-logo-text">Chef AI</span>
+  </a>
+  <a href="#waitlist" class="nav-cta">Join Waitlist</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Coming soon to the App Store</div>
+  <h1 class="hero-headline">
+    Scan your fridge.<br>
+    <em>Cook something amazing.</em>
+  </h1>
+  <p class="hero-sub">Chef AI turns your fridge into a personal chef. Scan your ingredients, get 5 personalized recipes instantly, and track your macros automatically.</p>
+  
+  <form class="hero-form" id="hero-form">
+    <input type="email" class="hero-input" placeholder="Enter your email" required>
+    <button type="submit" class="hero-btn">Join the Waitlist</button>
+  </form>
+  <div class="success-message" id="hero-success">🎉 You're on the list! We'll notify you at launch.</div>
+  <p class="hero-social-proof">Join 2,000+ people waiting for launch</p>
+
+  <div class="hero-phones">
+    <div class="phone-mockup">
+      <div class="phone-screen">
+        <div class="phone-scan-frame">
+          <div class="phone-scan-line"></div>
+        </div>
+        <div class="phone-ingredients">
+          <span class="phone-ingredient-chip">🥚 Eggs</span>
+          <span class="phone-ingredient-chip">🧀 Cheese</span>
+          <span class="phone-ingredient-chip">🥦 Broccoli</span>
+          <span class="phone-ingredient-chip">🍗 Chicken</span>
+        </div>
+        <div class="phone-recipe-card">
+          <div class="phone-recipe-title">Cheesy Broccoli Frittata</div>
+          <div class="phone-recipe-meta">320 kcal · 28g protein · 15 min</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <p class="section-label">What Chef AI does</p>
+  <h2 class="section-headline">Everything a personal chef would do. In your pocket.</h2>
+  
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📸</div>
+      <h3 class="feature-title">Scan your fridge</h3>
+      <p class="feature-desc">Point your camera at your fridge, pantry, or freezer. Chef AI identifies every ingredient in seconds using AI vision.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🍽️</div>
+      <h3 class="feature-title">Get 5 personalized recipes</h3>
+      <p class="feature-desc">Every recipe is built from exactly what you have and tailored to your calorie targets, macros, and dietary preferences.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3 class="feature-title">Track macros automatically</h3>
+      <p class="feature-desc">Log a meal with one tap after cooking. Your daily calorie ring updates instantly. No manual entry needed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⏰</div>
+      <h3 class="feature-title">Never waste food again</h3>
+      <p class="feature-desc">Track expiry dates and get alerts before food goes bad. Chef AI suggests recipes that use expiring ingredients first.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💰</div>
+      <h3 class="feature-title">Save hundreds per month</h3>
+      <p class="feature-desc">See exactly how much you save by cooking at home instead of ordering out. Most users save $200-400 per month.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">👨‍👩‍👧</div>
+      <h3 class="feature-title">Built for families too</h3>
+      <p class="feature-desc">Family mode scales portions automatically, filters for picky eaters, and optimizes for your weekly grocery budget.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SAVINGS -->
+<section class="savings">
+  <h2 class="savings-headline">
+    The average family saves
+    <span class="savings-amount">$340</span>
+    per month with Chef AI
+  </h2>
+  <p class="savings-sub">That's $4,080 per year back in your pocket.</p>
+  
+  <div class="savings-stats">
+    <div>
+      <div class="savings-stat-number">30s</div>
+      <div class="savings-stat-label">From scan to recipe</div>
+    </div>
+    <div>
+      <div class="savings-stat-number">125</div>
+      <div class="savings-stat-label">Recipes per month</div>
+    </div>
+    <div>
+      <div class="savings-stat-number">4.8★</div>
+      <div class="savings-stat-label">Average rating</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how">
+  <p class="section-label">How it works</p>
+  <h2 class="section-headline">Three steps to dinner. Every night.</h2>
+  
+  <div class="steps">
+    <div class="step">
+      <div class="step-number">01</div>
+      <div>
+        <h3 class="step-title">Scan your fridge</h3>
+        <p class="step-desc">Open Chef AI and point your camera at your fridge. Our AI vision identifies every ingredient in under 15 seconds — eggs, leftovers, condiments, everything.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">02</div>
+      <div>
+        <h3 class="step-title">Get personalized recipes</h3>
+        <p class="step-desc">Chef AI generates 5 recipes built from your exact ingredients, tailored to your goals, dietary preferences, and how much time you have to cook tonight.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">03</div>
+      <div>
+        <h3 class="step-title">Cook and track automatically</h3>
+        <p class="step-desc">Follow the step-by-step instructions, then tap I Made This to instantly log the meal. Your calories and macros update automatically. No manual entry ever.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <p class="section-label">Early users</p>
+  <h2 class="section-headline" style="max-width:500px;margin:0 auto;">People who tried it can not stop using it</h2>
+  
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"I scanned my fridge on Sunday and had meals planned for the whole week in 2 minutes. Complete game changer for busy moms."</p>
+      <div class="testimonial-author">Jennifer K.</div>
+      <div class="testimonial-role">Mom of 3, Chicago</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"We were spending over $800 a month on takeout. Now it is under $200 and the food is honestly better. This app paid for itself in the first week."</p>
+      <div class="testimonial-author">Mike T.</div>
+      <div class="testimonial-role">Father of 2, Austin</div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">★★★★★</div>
+      <p class="testimonial-text">"Finally hitting my protein goals without obsessing over every meal. I just scan my fridge and it builds meals around my macros automatically."</p>
+      <div class="testimonial-author">Alex R.</div>
+      <div class="testimonial-role">Fitness enthusiast, NYC</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing" id="pricing">
+  <p class="section-label">Simple pricing</p>
+  <h2 class="section-headline" style="margin:0 auto;">Start free. Cancel anytime.</h2>
+  
+  <div class="pricing-cards">
+    <div class="pricing-card">
+      <p class="pricing-plan">Monthly</p>
+      <div class="pricing-price">$9.99</div>
+      <div class="pricing-period">per month</div>
+      <ul class="pricing-features">
+        <li>100 AI recipes per month</li>
+        <li>Fridge, pantry & freezer scan</li>
+        <li>Calorie & macro tracking</li>
+        <li>My Cookbook</li>
+        <li>Expiry date alerts</li>
+      </ul>
+      <a href="#waitlist" class="pricing-btn pricing-btn-outline">Join Waitlist</a>
+    </div>
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Most Popular — Save 33%</div>
+      <p class="pricing-plan">Annual</p>
+      <div class="pricing-price">$79.99</div>
+      <div class="pricing-period">per year — just $6.67/mo</div>
+      <ul class="pricing-features">
+        <li>125 AI recipes per month</li>
+        <li>Everything in Monthly</li>
+        <li>3-day free trial</li>
+        <li>25% more recipes than monthly</li>
+        <li>Priority support</li>
+      </ul>
+      <a href="#waitlist" class="pricing-btn pricing-btn-filled">Start Free Trial</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="waitlist">
+  <h2 class="cta-headline">Be first when we launch.</h2>
+  <p class="cta-sub">Join the waitlist and get early access plus an exclusive launch discount.</p>
+  
+  <form class="cta-form" id="cta-form">
+    <input type="email" class="cta-input" placeholder="Enter your email" required>
+    <button type="submit" class="cta-btn">Get Early Access</button>
+  </form>
+  <div class="success-message" id="cta-success" style="margin-top:16px;display:none;">🎉 You're on the list! We'll be in touch soon.</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Chef AI</div>
+  <div class="footer-links">
+    <a href="/privacy.html">Privacy Policy</a>
+    <a href="/terms.html">Terms of Service</a>
+    <a href="mailto:hello@usechefai.com">hello@usechefai.com</a>
+  </div>
+  <div class="footer-copy">© 2026 Chef AI. All rights reserved.</div>
+</footer>
+
+<script>
+  function handleForm(formId, successId) {
+    document.getElementById(formId).addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = this.querySelector('input[type="email"]').value;
+      
+      // Store email (you can replace this with your email service)
+      console.log('Waitlist signup:', email);
+      
+      // Show success
+      this.style.display = 'none';
+      const success = document.getElementById(successId);
+      success.style.display = 'block';
+      
+      // You can add your email service here:
+      // fetch('https://your-backend.com/waitlist', {
+      //   method: 'POST',
+      //   body: JSON.stringify({ email }),
+      //   headers: { 'Content-Type': 'application/json' }
+      // });
+    });
+  }
+  
+  handleForm('hero-form', 'hero-success');
+  handleForm('cta-form', 'cta-success');
+</script>
+
+</body>
+</html>
